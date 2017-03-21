@@ -1,0 +1,23 @@
+language: c
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.stack
+    - .stack-work
+
+before_install:
+  - mkdir -pv ~/.local/bin
+  - export PATH=$HOME/.local/bin:$PATH
+
+install:
+  - travis_retry curl -L https://www.stackage.org/stack/linux-x86_64 | tar xz --wildcards --strip-components=1 -C ~/.loc
+
+script:
+  - stack $ARGS --no-terminal --install-ghc test --flag scale:dev
+  - stack $ARGS --no-terminal sdist
+  - stack $ARGS --no-terminal haddock --no-haddock-deps
+
+notifications:
+  email: false
