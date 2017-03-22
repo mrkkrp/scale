@@ -87,7 +87,7 @@ parseNote = (\case
   "a#" -> pure As
   "as" -> pure As
   "b"  -> pure B
-  _    -> Nothing) . fmap toLower
+  _    -> Nothing) . normalize
 
 -- | Intervals.
 
@@ -155,7 +155,7 @@ parseInterval = (\case
   "major seventh"  -> pure MajorSeventh
   "perfect octave" -> pure PerfectOctave
   "octave"         -> pure PerfectOctave
-  _                -> Nothing) . fmap toLower
+  _                -> Nothing) . normalize
 
 -- | Shift a note by a given interval.
 
@@ -176,3 +176,11 @@ instance FromJSON Scale where
     scaleName      <- CI.mk      <$> (o .: "name")
     scaleIntervals <- E.fromList <$> (o .: "intervals")
     return Scale {..}
+
+----------------------------------------------------------------------------
+-- Helpers
+
+-- | Normalize 'String' with respect to case and white space.
+
+normalize :: String -> String
+normalize = fmap toLower . unwords . words
