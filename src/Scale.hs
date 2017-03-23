@@ -9,9 +9,11 @@
 --
 -- Definitions of 'Note', 'Interval', and 'Scale'.
 
-{-# LANGUAGE LambdaCase        #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveGeneric      #-}
+{-# LANGUAGE LambdaCase         #-}
+{-# LANGUAGE OverloadedStrings  #-}
+{-# LANGUAGE RecordWildCards    #-}
 
 module Scale
   ( Note (..)
@@ -27,7 +29,10 @@ where
 import Data.Aeson
 import Data.CaseInsensitive (CI)
 import Data.Char (toLower)
+import Data.Data (Data)
 import Data.Set (Set)
+import GHC.Generics
+import Language.Haskell.TH.Syntax (Lift)
 import qualified Data.CaseInsensitive as CI
 import qualified Data.Set             as E
 import qualified Data.Text            as T
@@ -47,7 +52,9 @@ data Note
   | A
   | As
   | B
-  deriving (Eq, Ord, Show, Read, Enum, Bounded)
+  deriving (Eq, Ord, Show, Read, Enum, Bounded, Data, Generic)
+
+instance Lift Note
 
 -- | Pretty-print a note.
 
@@ -105,7 +112,9 @@ data Interval
   | MinorSeventh  -- ^ 10
   | MajorSeventh  -- ^ 11
   | PerfectOctave -- ^ 12
-  deriving (Eq, Ord, Show, Read, Enum, Bounded)
+  deriving (Eq, Ord, Show, Read, Enum, Bounded, Data, Generic)
+
+instance Lift Interval
 
 instance FromJSON Interval where
   parseJSON = withText "Interval" $ \t ->
@@ -169,7 +178,9 @@ shiftNote n i = toEnum $ (fromEnum n + fromEnum i) `mod` n'
 data Scale = Scale
   { scaleName      :: CI String    -- ^ Scale name
   , scaleIntervals :: Set Interval -- ^ Scale intervals
-  } deriving (Eq, Ord, Show, Read)
+  } deriving (Eq, Ord, Show, Read, Data, Generic)
+
+instance Lift Scale
 
 instance FromJSON Scale where
   parseJSON = withObject "Scale" $ \o -> do

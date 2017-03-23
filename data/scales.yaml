@@ -1,0 +1,21 @@
+---
+- name: major
+  intervals:
+    - perfect unison
+    - major second
+    - major third
+    - perfect fourth
+    - perfect fifth
+    - major sixth
+    - major seventh
+    - perfect octave
+- name: minor
+  intervals:
+    - perfect unison
+    - major second
+    - minor third
+    - perfect fourth
+    - perfect fifth
+    - minor sixth
+    - minor seventh
+    - perfect octave
